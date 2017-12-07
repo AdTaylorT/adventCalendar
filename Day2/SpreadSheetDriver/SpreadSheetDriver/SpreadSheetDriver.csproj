@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>SpreadSheetDriver</AssemblyName>
+    <RootNamespace>SpreadSheetDriver</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="SpreadSheet">
+      <HintPath>..\..\SpreadSheet\SpreadSheet\obj\Debug\netcoreapp2.0\SpreadSheet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
