@@ -22,5 +22,17 @@ namespace SS
 
             return sum;
         }
+
+        public int CalculateSumOfRowDivision()
+        {
+            int sum = 0;
+
+            foreach (Row currentRow in MyRows)
+            {
+                sum += currentRow.CalculateSumOfRowsOnlyDivision();
+            }
+
+            return sum;
+        }
     }
 }

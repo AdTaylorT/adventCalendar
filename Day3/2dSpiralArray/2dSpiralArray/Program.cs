@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Collections.Generic;
 
 namespace _2dSpiralArray
 {
@@ -9,17 +8,17 @@ namespace _2dSpiralArray
         public static int[,] myArray;
         public static int size;
         public static int index;
-
+        public static int target = 0;
         static void Main(string[] args)
         {
             Console.WriteLine("Enter an target integer: ");
             string target_string = Console.ReadLine();
-            int target = int.Parse(target_string);
+            target = int.Parse(target_string);
 
             int largest_element = FindGreatestValueOfSquare(target);
-            int[] targetIndex = Build2dArray(largest_element, target);
-
-            Console.WriteLine(PathToCenter(targetIndex));
+            Build2dArray(largest_element, target);
+            
+            //Console.WriteLine(PathToCenter(targetIndex));
 
             CloseOut();
         }
@@ -35,10 +34,10 @@ namespace _2dSpiralArray
             {
                 throw new Exception();
             }
-            while (myArray[width,height] != 1)
+            while (myArray[width, height] != 1)
             {
                 char dir = GetDirectionOfCenter(width, height);
-                path += dir+", ";
+                path += dir + ", ";
                 distanceToCenter++;
 
                 int[] pos = MoveOneStepToCenter(dir, width, height);
@@ -46,7 +45,7 @@ namespace _2dSpiralArray
                 height = pos[1];
             }
 
-            return path+distanceToCenter;
+            return path + distanceToCenter;
         }
 
         static int[] MoveOneStepToCenter(char dir, int w, int h)
@@ -89,7 +88,7 @@ namespace _2dSpiralArray
 
             int[] values = { l_val, r_val, u_val, d_val };
             int min_val = int.MaxValue;
-            foreach(int val in values)
+            foreach (int val in values)
             {
                 if (val < min_val) min_val = val;
             }
@@ -107,7 +106,7 @@ namespace _2dSpiralArray
             {
                 dir = 'd';
             }
-            else if( min_val == u_val)
+            else if (min_val == u_val)
             {
                 dir = 'u';
             }
@@ -133,6 +132,7 @@ namespace _2dSpiralArray
             Console.ReadKey();
         }
 
+        /*
         static int[] Build2dArray(int largest_element, int target)
         {
             myArray = new int[size, size];
@@ -163,6 +163,100 @@ namespace _2dSpiralArray
             }
 
             return targetIndex;
+        }*/
+
+        public static int[] targetIndex = { 0, 0 };
+        public static char mydir = 'r';
+        static void Build2dArray(int largest_element, int target)
+        {
+            myArray = new int[size, size];
+            int _largest = largest_element;
+            int value = 1;
+            int length = 1;
+            int width = size / 2;
+            int height = size / 2;
+
+            Console.WriteLine(mydir + " " + _largest + " w:" + width + " h:" + height);
+            myArray[width, height] = value++;
+            while (HasNextPosInDir(width, height, mydir))
+            {
+                Console.WriteLine(mydir + " " + _largest + " w:" + width + " h:" + height);
+                //int[] res = InitNextSides(width, height, length, value);
+                int[] res = InitNextSidesDiffValue(width, height, length);
+                width = res[0];
+                height = res[1];
+                value = res[2];
+                if (value > target) break;
+                length++;
+            }
+        }
+
+        public static int[] InitNextSides(int _w, int _h, int _l, int _v)
+        {
+            for (int sides = 0; sides < 2; sides++)
+            {
+                for (int i = 0; i < _l; i++)
+                {
+                    if (HasNextPosInDir(_w, _h, mydir))
+                    {
+                        int[] pos = NextPos(_w, _h, mydir);
+                        _w = pos[0];
+                        _h = pos[1];
+                        myArray[_w, _h] = _v;
+                        if (_v == target)
+                        {
+                            targetIndex = new[] { _w, _h };
+                        }
+                        _v++;
+                    }
+                }
+                mydir = NextDir(mydir);
+            }            
+
+            return new[] { _w, _h, _v };
+        }
+
+        public static int[] InitNextSidesDiffValue(int _w, int _h, int _l)
+        {
+            int _v = 0;
+            for (int sides = 0; sides < 2; sides++)
+            {
+                for (int i = 0; i < _l; i++)
+                {
+                    if (HasNextPosInDir(_w, _h, mydir))
+                    {
+                        int[] pos = NextPos(_w, _h, mydir);
+                        _w = pos[0];
+                        _h = pos[1];
+                        _v = CalculateValueAtPosition(_w, _h);
+                        if (_v > target)
+                        {
+                            Console.WriteLine(_v);
+                            return new[] { _w, _h, _v };
+                        }
+                        myArray[_w, _h] = _v;
+                    }
+                }
+                mydir = NextDir(mydir);
+            }
+
+            return new[] { _w, _h, _v};
+        }
+
+        public static int CalculateValueAtPosition(int width, int height)
+        {
+            int sum = 0;
+
+            if (width + 1 <= size && height - 1 > 0) sum += myArray[width + 1, height - 1];
+            if (width + 1 <= size) sum += myArray[width + 1, height];
+            if (width + 1 <= size && height + 1 <= size) sum += myArray[width + 1, height + 1];
+            if (height + 1 <= size) sum += myArray[width, height + 1];
+            if (width - 1 > 0 && height + 1 <= size) sum += myArray[width - 1, height + 1];
+            if (width - 1 > 0) sum += myArray[width - 1, height];
+            if (width - 1 > 0 && height - 1 > 0) sum += myArray[width - 1, height - 1];
+            if (height - 1 > 0) sum += myArray[width, height - 1];
+
+            return sum;
         }
 
         static bool CanAssignCurrentPos(int _w, int _h)
@@ -182,13 +276,13 @@ namespace _2dSpiralArray
             switch (_dir)
             {
                 case 'l':
-                    return 'u';
-                case 'u':
-                    return 'r';
-                case 'r':
                     return 'd';
-                case 'd':
+                case 'u':
                     return 'l';
+                case 'r':
+                    return 'u';
+                case 'd':
+                    return 'r';
                 default:
                     return '\0';
             }
@@ -230,7 +324,7 @@ namespace _2dSpiralArray
             {
                 return false;
             }
-            else if( myArray[_w,_h] == 0)
+            else if( myArray[_w,_h] == 0 )
             {
                 return true;
             }
