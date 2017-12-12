@@ -9,6 +9,7 @@ namespace MemoryReAllocation
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             Console.Write("Which day?");
@@ -27,14 +28,14 @@ namespace MemoryReAllocation
 
         public static void Day1()
         {
-            int[] memoryBanks = new int[] { 4,1,15,12,0,9,9,5,5,8,7,3,14,5,12,3 };
+            int[] memoryBanks = new int[] { 4, 1, 15, 12, 0, 9, 9, 5, 5, 8, 7, 3, 14, 5, 12, 3 };
             int[] currentProfile = (int[])memoryBanks.Clone();
             int countOfRedis = 0;
 
             Dictionary<int[], int> memoryDistributionHist = new Dictionary<int[], int>(new MyEqualityComparer());
             while (!memoryDistributionHist.ContainsKey(currentProfile))
             {
-                memoryDistributionHist.Add(currentProfile, 1);
+                memoryDistributionHist.Add(currentProfile, countOfRedis);
                 int largestMemBank = memoryBanks.Max();
                 int indexOfLargestMemBank = Array.IndexOf(memoryBanks, largestMemBank);
 
@@ -51,11 +52,12 @@ namespace MemoryReAllocation
                 countOfRedis++;
             }
             Console.WriteLine("Number of re-dis: " + countOfRedis);
+            Console.WriteLine("Distance from last saw pattern: " + (countOfRedis - memoryDistributionHist[currentProfile]));
         }
 
         public static void Day2()
         {
-
+            Day1();
         }
 
         public class MyEqualityComparer : IEqualityComparer<int[]>
