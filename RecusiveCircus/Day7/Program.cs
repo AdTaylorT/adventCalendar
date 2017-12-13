@@ -4,11 +4,13 @@ using System.IO;
 
 namespace Circus
 {
+    //TODO custom equality comparer
+
     public class MyNode
     {
         public int weight;
         public string name;
-        public List<MyNode> children = new List<MyNode>();
+        public Dictionary<string, MyNode> children = new Dictionary<string, MyNode>();
 
         public MyNode(string name)
         {
@@ -21,30 +23,73 @@ namespace Circus
             this.weight = weight;
         }
 
-        public MyNode(string name, int weight, List<MyNode> children)
+        public MyNode(string name, int weight, Dictionary<string, MyNode> children)
         {
             this.name = name;
             this.weight = weight;
             this.children = children;
         }
 
+        public void SetWeight(int weight)
+        {
+            this.weight = weight;
+        }
+        public void SetChildren(List<MyNode> children)
+        {
+            children.ForEach(x => this.children.Add(x.name, x));
+        }
+
+        public bool HasChildren() => (this.children.Count > 0);
+
+        //TODO this is complicated with dictionaries
+        // or is it?
         public override string ToString()
         {
             string child_string = "";
-            foreach (MyNode child in children)
+            foreach(KeyValuePair<string, MyNode> entry in children)
             {
-                child_string += child.name +", ";
+                child_string += entry.ToString();
             }
 
             return "name: " + name + " weight: " + weight + " children: " + child_string;
         }
+    }
 
-        
+
+    // TODO what is this?
+    public class MyEqualityComparer : IEqualityComparer<Dictionary<string, MyNode>>
+    {
+        public bool Equals(Dictionary<string, MyNode> x, Dictionary<string, MyNode> y)
+        {
+            if (x.Count != y.Count)
+            {
+                return false;
+            }
+            
+
+            
+
+            return true;
+        }
+
+        public int GetHashCode(Dictionary<string, MyNode> obj)
+        {
+            int result = 17;            
+            foreach(KeyValuePair<string, MyNode> kvp in obj)
+            {
+                unchecked
+                {
+                    result = result * 23 + kvp.Key.GetHashCode();
+                }
+            }
+
+            return result;
+        }
     }
 
     class Program
     {
-        public static List<MyNode> myNodes = new List<MyNode>();
+        public static Dictionary<string, MyNode> myNodes = new Dictionary<string, MyNode>();
 
         static void Main(string[] args)
         {
@@ -72,7 +117,9 @@ gyxo (61)
 cntj (57)";
             foreach (string line in testinput.Split('\n'))
             {
-                myNodes.Add(new MyNode( _initMyNode(line) ));
+                MyNode currentNode = ParseInput(line);
+                myNodes.Add(currentNode.name, currentNode);
+                
             }
 
             Console.Write("Which day?");
@@ -91,16 +138,24 @@ cntj (57)";
 
         public static void Day1()
         {
-            
-
+            foreach(KeyValuePair<string, MyNode> entry in myNodes)
+            {
+                Console.WriteLine(entry.ToString());
+            }
         }
 
         public static void Day2()
         {
         }
 
-        public void _initMyNode(string starter)
+        // input
+        // ktlj (57)
+        // fwft (72) -> ktlj, cntj, xhth
+        public static MyNode ParseInput(string starter)
         {
+            string name = "";
+            int weight = 0;
+            List<MyNode> children = new List<MyNode>();
             string name_and_weight = "";
             if (starter.Contains("->"))
             {
@@ -111,7 +166,7 @@ cntj (57)";
                     string[] c_split = split[2].Split(',');
                     foreach (string child in c_split)
                     {
-                        children.Add(child.Trim());
+                        children.Add(new MyNode(child.Trim()));
                     }
                 }
 
@@ -129,6 +184,11 @@ cntj (57)";
                 string weight_string = naw[1];
                 weight = int.Parse(weight_string.Trim(' ', '(', ')', '\r'));
             }
+
+            MyNode newNode = new MyNode(name, weight);
+            if (children.Count > 0) newNode.SetChildren(children);
+
+            return newNode;
         }
     }
 }
