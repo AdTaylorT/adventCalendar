@@ -56,13 +56,13 @@ namespace Circus
         }
 
         public bool HasChildren() => (this.children.Count > 0);
-        
+
         public override string ToString()
         {
             string child_string = "";
-            foreach(KeyValuePair<string, MyNode> entry in children)
+            foreach (KeyValuePair<string, MyNode> entry in children)
             {
-                child_string += '\t'+entry.ToString()+'\n';
+                child_string += '\t' + entry.ToString() + '\n';
             }
 
             return "name: " + name + " rawweight: " + rawWeight + " weight: " + weight + " children: " + '\n' + child_string;
@@ -114,7 +114,7 @@ cntj (57)";*/
                 MyNode currentNode = ParseInput(line);
                 myNodes.Add(currentNode.name, currentNode);
             }
-            
+
             Console.Write("Which day?");
             char day = Console.ReadKey().KeyChar;
             Console.WriteLine();
@@ -145,7 +145,7 @@ cntj (57)";*/
                 myNodes.Remove(name);
             }
 
-            foreach(KeyValuePair<string, MyNode> enter in myNodes)
+            foreach (KeyValuePair<string, MyNode> enter in myNodes)
             {
                 Console.WriteLine(enter.Key);
             }
@@ -167,7 +167,7 @@ cntj (57)";*/
          * */
         public static void Day2()
         {
-            foreach( KeyValuePair<string, MyNode> kvp in myNodes)
+            foreach (KeyValuePair<string, MyNode> kvp in myNodes)
             {
                 if (kvp.Value.HasChildren())
                 {
@@ -189,7 +189,7 @@ cntj (57)";*/
                     deleteNodes.Add(kvp.Key);
                 }
             }
-            foreach(string deleteName in deleteNodes)
+            foreach (string deleteName in deleteNodes)
             {
                 myNodes.Remove(deleteName);
             }
@@ -201,11 +201,11 @@ cntj (57)";*/
             Console.WriteLine(delta);
             Console.WriteLine(myCorrectedWeight);
             Console.WriteLine("done");
-            
+
         }
 
         // Takes a parent node and correlates its children against the base list of actual nodes
-        public static void GetToTheTop( MyNode parent )
+        public static void GetToTheTop(MyNode parent)
         {
             // looks up each child in the main table 
             Dictionary<string, MyNode> realChildren = new Dictionary<string, MyNode>();
@@ -216,7 +216,7 @@ cntj (57)";*/
             }
             parent.ClearChildren();
             parent.SetChildren(realChildren);
-            
+
             // Tests if there is a higher node and goes there if there is.
             foreach (KeyValuePair<string, MyNode> realChild in realChildren)
             {
@@ -239,41 +239,41 @@ cntj (57)";*/
             {
                 if (realChild.Value.HasChildren())
                 {
-                    realChild.Value.weight += ( WeightOfTower(realChild.Value) * realChild.Value.children.Count);
+                    realChild.Value.weight += (WeightOfTower(realChild.Value) * realChild.Value.children.Count);
                 }
                 if (firstWeight == 0)
                 {
                     firstWeight = realChild.Value.weight;
                     continue;
                 }
-                if(firstWeight == realChild.Value.weight && consensusWeight == 0)
+                if (firstWeight == realChild.Value.weight && consensusWeight == 0)
                 {
                     consensusWeight = firstWeight;
                 }
-                if(firstWeight != realChild.Value.weight )
+                if (firstWeight != realChild.Value.weight)
                 {
-                    if(otherWeight == 0)
+                    if (otherWeight == 0)
                     {
                         otherWeight = realChild.Value.weight;
                     }
-                    else if(otherWeight == realChild.Value.weight && consensusWeight == 0)
+                    else if (otherWeight == realChild.Value.weight && consensusWeight == 0)
                     {
                         consensusWeight = otherWeight;
                     }
                 }
             }
 
-            if(otherWeight != 0)
+            if (otherWeight != 0)
             {
-                if(consensusWeight == otherWeight)
+                if (consensusWeight == otherWeight)
                 {
                     foreach (KeyValuePair<string, MyNode> child in parent.children)
                     {
-                        if(child.Value.weight == firstWeight)
+                        if (child.Value.weight == firstWeight)
                         {
                             setCorrectedWeight(child.Value.rawWeight);
                         }
-                        
+
                     }
                     delta = consensusWeight - firstWeight;
                 }
@@ -329,7 +329,7 @@ cntj (57)";*/
             }
             else
             {
-                if(starter.Length > 1)
+                if (starter.Length > 1)
                 {
                     name_and_weight = starter;
 

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CD4B93DF-0A6A-485A-8543-B79E79403650}</ProjectGuid>
+    <ProjectGuid>{455D7858-D0BC-4866-BE7A-9C395A7B3769}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Day7</RootNamespace>
-    <AssemblyName>Day7</AssemblyName>
+    <RootNamespace>RecursiveCircus</RootNamespace>
+    <AssemblyName>RecursiveCircus</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,9 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="input.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
